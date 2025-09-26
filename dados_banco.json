@@ -1,0 +1,15 @@
+{
+    "estoque":[
+        {
+            "nome": "carne",
+            "quantidade": 1,
+            "tipo_unidade": "unidade",
+            "valor": 15.18
+        },
+        {
+            "nome": "pão",
+            "quantidade": 0,
+            "tipo_unidade": "unidade",
+            "valor": 6.18
+        }]
+}
