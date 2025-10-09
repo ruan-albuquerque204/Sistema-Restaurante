@@ -1,4 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 
-db = SQLAlchemy()
+from .data_base import db
+from .produto import Produto
+from .pedido import Pedido
+from .cliente import Cliente
+from .item_pedido import ItemPedido
+from .funcionario import Funcionario

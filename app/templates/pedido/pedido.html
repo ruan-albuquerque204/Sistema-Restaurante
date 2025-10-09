@@ -1,0 +1,28 @@
+{% extends "partials.html" %}
+{% block body %}
+<div class="container-fluid px-4">
+    <h1>Detalhes do Pedido</h1>
+    
+    <table class="table table-striped table-dark">
+        <caption>Total do Pedido: R$ {{ montante }}</caption>
+        <thead>
+            <tr>
+                <td>Produto</td>
+                <td>Valor</td>
+                <td>Quantidade</td>
+                <td>Montante</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in itens %}
+            <tr>
+                <td>{{ item.nome }}</td>
+                <td>R$ {{ item.valor }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>R$ {{ item.montante }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}
