@@ -10,8 +10,7 @@ class ItemPedido(db.Model):
     valor = Column(DECIMAL(10,2), nullable=False)
     quantidade = Column(Integer, nullable=False)
     
-    pedido_fk = Column(Integer, ForeignKey('pedido.id'))
-    
+    pedido_fk = Column(Integer, ForeignKey('pedido.id', ondelete='CASCADE'))
     pedido = relationship('Pedido', back_populates='itens')
     
     @validates('quantidade')

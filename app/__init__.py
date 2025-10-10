@@ -1,5 +1,6 @@
 # app/__init__.py
 from flask import Flask, redirect, url_for
+
 from . import routes as rt
 from .models import db
 

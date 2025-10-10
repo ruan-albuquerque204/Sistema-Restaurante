@@ -9,7 +9,10 @@
         <thead>
             <tr>
                 <td>Id</td>
+                <td>Cliente</td>
                 <td>Valor</td>
+                <td>Valor Pago</td>
+                <td>Troco</td>
                 <td>Forma de Pagamento</td>
                 <td>SKUs</td>
                 <td>Data</td>
@@ -20,13 +23,17 @@
             {% for pedido in pedidos %}
             <tr>
                 <td>{{ pedido.id }}</td>
+                <td>{{ pedido.cliente }}</td>
                 <td>{{ pedido.valor }}</td>
+                <td>{{ pedido.valor_pago }}</td>
+                <td>{{ pedido.valor_pago - pedido.valor}}</td>
                 <td>{{ pedido.forma_pagamento }}</td>
                 <td>{{ pedido.quant_produtos }}</td>
                 <td>{{ pedido.data }}</td>
-                <td><a href="{{url_for('views.produtos_pedido', id=pedido.id)}}">
-                    <button class="btn btn-secondary">Detalhes</button>
-                </a></td>
+                <td>
+                    <a href="{{url_for('views.produtos_pedido', id=pedido.id)}}"> <button class="btn btn-secondary">Detalhes</button> </a>
+                    <a href="{{url_for('pedido.excluir', id=pedido.id)}}"> <button class="btn btn-danger">Excluir</button> </a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

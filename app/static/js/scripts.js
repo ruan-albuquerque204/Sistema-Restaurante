@@ -1,5 +1,11 @@
 const inputQuantidade = document.getElementById('quantidade');
 const selectProdutos = document.getElementById('produtos');
+const pagoInput = document.getElementById('valorPago');
+const trocoInput = document.getElementById('valorTroco');
+
+let totalPago = 0;
+let totalPedido = 0;
+
 const todosProdutos = {};
 
 // const produtos = [
@@ -37,6 +43,12 @@ const pedido = [];
 //     });
 // });
 
+pagoInput.addEventListener('input', calcularTroco);
+
+function calcularTroco(e) {
+    valorTroco.value = ((pagoInput.value * 100 - totalPedido * 100) / 100).toFixed(2);
+};
+
 function adicionarItem() {
     const produtoId = parseInt(document.getElementById('produtos').value);
     const quantidade = parseFloat(document.getElementById('quantidade').value);
@@ -47,9 +59,8 @@ function adicionarItem() {
         return;
     }
 
-    pedido.push({ ...produto, quantidade, id: produtoId });
+    pedido.push({ ...produto, quantidade, id: produtoId});
     atualizarLista();
-    
 };
 
 function limparPedido() {
@@ -61,8 +72,8 @@ function atualizarLista() {
     const tabela = document.getElementById('tabela-pedido');
     const tbody = tabela.querySelector('tbody');
     const totalMessage = tabela.querySelector('caption');
-
-    let totalPedido = 0;
+    
+    totalPedido = 0;
 
     tbody.innerHTML = '';
 
@@ -87,7 +98,12 @@ function atualizarLista() {
     });
     
     totalMessage.textContent = 'Total do Pedido: R$ ' + (totalPedido / 100).toFixed(2);
-
+    
+    totalPago = (totalPedido / 100).toFixed(2);
+    totalPedido = totalPago;
+    
+    pagoInput.value = totalPago;
+    calcularTroco();
 };
 
 function enviarProduto() {
@@ -102,6 +118,8 @@ function enviarProduto() {
     const buttons = document.querySelectorAll('button');
     const itensPedido = [];
     const formaPagamento = document.getElementById('formaPagamento').value;
+    const cliente = document.getElementById('nome').value;
+
     pedido.forEach(v => {
         itensPedido.push({'id': v.id, 'quantidade': v.quantidade})
     });
@@ -117,7 +135,9 @@ function enviarProduto() {
         },
         body: JSON.stringify({
             'itens': itensPedido,
-            'forma_pagamento': formaPagamento
+            'forma_pagamento': formaPagamento,
+            'cliente': cliente,
+            'valorPago': pagoInput.value
         })
     })
     .then(response => {
@@ -140,7 +160,6 @@ function enviarProduto() {
         e.disabled = false;
     });
     });}
-
 
 Array.from(selectProdutos.options).forEach(item => {
     if (isNaN(parseInt(item.value))) return;

@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, url_for
 
 from ..models import db, IntegrityError, Pedido, Cliente, Produto, ItemPedido, Funcionario
 
@@ -20,6 +20,7 @@ def criar_pedido():
     
     funcionario = data.get('funcionario')
     cliente = data.get('cliente')
+    valor_pago = data.get('valorPago')
     itens = data.get('itens')
     forma_pagamento = data.get('forma_pagamento')
     data = data.get('data')
@@ -46,8 +47,11 @@ def criar_pedido():
     
     # itens_contadores = map(lambda i: float(i) if i // 1 > 0 else)
     
-    pedido = Pedido(data=data) # funcionario_fk=funcionario, cliente_fk=cliente
-    itens_pedidos: list[ItemPedido] = []
+    pedido = Pedido(
+        data=data,
+        cliente=cliente,
+        valor_pago=valor_pago,
+        forma_pagamento=forma_pagamento) # funcionario_fk=funcionario, cliente_fk=cliente
     
     mont_pedido = Decimal()
     quant_pedido = 0
@@ -59,20 +63,37 @@ def criar_pedido():
         #     return jsonify({'error': f'produto {produto.nome} não possui estoque suficiente'}), 400
         mont_pedido += produto.valor * quant_item
         quant_pedido += 1
-        itens_pedidos.append(ItemPedido(nome=produto.nome, valor=float(produto.valor), quantidade=float(quant_item) if float(quant_item) % 1 > 0 else int(quant_item)))
+        
+        item = ItemPedido(
+            nome=produto.nome,
+            valor=float(produto.valor),
+            pedido=pedido,
+            quantidade=float(quant_item) if float(quant_item) % 1 > 0 else int(quant_item))
+        
+        pedido.itens.append(item)
         # produto.quantidade -= value
     
     pedido.valor = float(mont_pedido)
     pedido.quant_produtos = quant_pedido
-    pedido.forma_pagamento = forma_pagamento
     
     db.session.add(pedido)
+    db.session.add_all(pedido.itens)
+    db.session.commit()
+        
+    return jsonify({'status': 'ok', 'mensagem': f'Pedido {pedido.id} cadastrado com sucesso.','pedido': pedido.to_json(), 'itens': [ip.to_json() for ip in pedido.itens]}), 201
+
+
+# Views
+@bp_pedido.route('/excluir/<int:id>')
+def excluir(id: int):
+    pedido = db.session.query(Pedido).filter_by(id=id).first()
+    
+    if not pedido:
+        return redirect(url_for('views.pedidos'))
+    
+    db.session.delete(pedido)
     db.session.commit()
     
-    for ip in itens_pedidos:
-        ip.pedido_fk = pedido.id
     
-    db.session.add_all(itens_pedidos)
-    db.session.commit()
+    return redirect(url_for('views.pedidos'))
     
-    return jsonify({'status': 'ok', 'mensagem': f'Pedido {pedido.id} cadastrado com sucesso.','pedido': pedido.to_json(), 'itens': [ip.to_json() for ip in itens_pedidos]}), 201
