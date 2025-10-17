@@ -41,3 +41,7 @@ def produtos_pedido(id: int):
         itens.append(i)
     
     return render_template('pedido/pedido.html', title=f'Pedido {id}', itens=itens, montante=f'{montante:.2f}')
+
+@bp_views.route('/pagina-teste')
+def pagina_teste():
+    return render_template('test.html', titulo='Página Teste')

@@ -1,5 +1,17 @@
 {% extends "partials.html" %}
 
+{% block head %}
+<style>
+  .btnClose {
+        background-color: red;
+        border-radius: 2px;
+        padding: 0px 5px;
+        border: none;
+    }
+</style>
+{% endblock head %}
+
+
 {% block body %}
 
 <div class="conteiner px-4">
@@ -48,6 +60,7 @@
           <td>Item</td>
           <td>Quantidade</td>
           <td>Total</td>
+          <td>.</td>
         </tr>
       </thead>
       <tbody>
@@ -81,6 +94,8 @@
   <button class="btn btn-success" onclick="enviarProduto()">Enviar Pedido</button>
 </div>
 
-<script src="{{url_for('static', filename='js/scripts.js')}}"></script>
+
+
+<script src="{{url_for('static', filename='js/comanda.js')}}"></script>
 
 {% endblock body %}

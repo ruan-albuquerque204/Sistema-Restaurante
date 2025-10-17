@@ -8,40 +8,7 @@ let totalPedido = 0;
 
 const todosProdutos = {};
 
-// const produtos = [
-//   { id: 1, nome: 'Camiseta', preco: 49.90 },
-//   { id: 2, nome: 'Calça Jeans', preco: 129.90 },
-//   { id: 3, nome: 'Tênis', preco: 199.90 },
-//   { id: 4, nome: 'Boné', preco: 39.90 }
-// ];
-
 const pedido = [];
-
-// Preenche o dropdown com os produtos
-// const selectProduto = document.getElementById('produto');
-// produtos.forEach(produto => {
-//   const option = document.createElement('option');
-//   option.value = produto.id;
-//   option.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
-//   selectProduto.appendChild(option);
-// });
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     fetch('api/produto')
-//     .then(response => {
-//         if (!response.ok) throw new Error('Não foi possível coisar');
-//         return response.json()
-//     })
-//     .then(data => {
-//         data.forEach(produto => {
-//             todosProdutos[produto['id']] = produto
-//         })
-//     })
-//     .catch(error => {
-//         console.alert('Error', error)
-//         alert('Falha na busca.')
-//     });
-// });
 
 pagoInput.addEventListener('input', calcularTroco);
 
@@ -85,12 +52,22 @@ function atualizarLista() {
         const tr = document.createElement('tr');
         const valor = (((item.valor * 100) * item.quantidade) / 100).toFixed(2);
         const conteudo = [item.nome, item.quantidade, 'R$ ' + valor];
-        
+
         conteudo.forEach(i => {
             const td = document.createElement('td');
             td.textContent = i;
             tr.appendChild(td);
         });
+        
+        const td = document.createElement('td');
+        const input = document.createElement('input');
+        input.className = 'btnClose';
+        input.type = 'button';
+        input.value = '\u2715';
+        input.onclick = function () {deleteItem(this);}
+        
+        td.appendChild(input);
+        tr.appendChild(td);
 
         tbody.appendChild(tr);
         
@@ -161,6 +138,21 @@ function enviarProduto() {
     });
     });}
 
+function deleteItem(button) {
+        const row = button.closest('tr');
+        
+        const tabela = document.getElementById('tabela-pedido');
+        
+        const rows = Array.from(tabela.rows);
+
+        const index = rows.indexOf(row);
+
+        pedido.splice(index);
+
+        row.innerHTML = '';
+    };
+
+    
 Array.from(selectProdutos.options).forEach(item => {
     if (isNaN(parseInt(item.value))) return;
 
@@ -170,38 +162,3 @@ Array.from(selectProdutos.options).forEach(item => {
         'valor': conteudo[1]
     };
 })
-
-// function formatarNumero(valor) {
-//     let filtrado = valor.replace(/[^0-9.]/g, '');
-    
-//     const partes = filtrado.split('.');
-//     if (partes.length > 2) {
-//         filtrado = partes.shift() + '.' + partes.join('');
-//     }
-    
-//     return filtrado
-// }
-
-// function validarFormatar() {
-//     let val = inputQuantidade.value.trim();
-    
-//     val = formatarNumero(val);
-    
-//     if (Number(val) > 0) {
-//         inputQuantidade.value = Number(val);
-//     } else {
-//         inputQuantidade.value = '';
-//     }
-// }
-
-// // EVENTOS
-
-// inputQuantidade.addEventListener('keydown', event => {
-//     if (event.key === 'Enter') {
-//         validarFormatar();
-//     }
-// })
-
-// inputQuantidade.addEventListener('blur', function() {
-//     validarFormatar();
-// });

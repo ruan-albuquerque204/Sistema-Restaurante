@@ -1,0 +1,31 @@
+{% extends "partials.html" %}
+
+{% block head %}
+<style>
+
+    .btnClose {
+        background-color: red;
+        border-radius: 2px;
+        border: none;
+    }
+
+</style>
+
+{% endblock head %}
+
+
+{% block body %}
+
+<table id="tabelar">
+    <tr>
+        <td>coisas</td>
+        <td>coisasd</td>
+        <td><input class="btnClose" type="button" value="&#10005;" onclick="deleteItem(this)"></td>
+    </tr>
+</table>
+
+<script>
+
+</script>
+
+{% endblock body %}
