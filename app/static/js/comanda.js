@@ -147,7 +147,7 @@ function deleteItem(button) {
 
         const index = rows.indexOf(row);
 
-        pedido.splice(index);
+        pedido.splice(index-1, 1);
 
         row.innerHTML = '';
     };
